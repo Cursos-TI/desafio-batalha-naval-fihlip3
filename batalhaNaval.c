@@ -4,13 +4,17 @@
 // Configurações de tamanho
 #define TAM_TABULEIRO 10
 #define TAM_NAVIO 3
+#define TAM_HAB 5
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
-    // Iniciando o tabuleiro e o tamanho dos navios
+    // Iniciando o tabuleiro e o tamanho dos navios e habilidades
     int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO] = {0};
     int navio[TAM_NAVIO] = {3, 3, 3};
+    int cone[TAM_HAB][TAM_HAB] = {0};
+    int cruz[TAM_HAB][TAM_HAB] = {0};
+    int octaedro[TAM_HAB][TAM_HAB] = {0};
 
     // Navio horizontal
     int linha_h = 2, col_h = 1; 
@@ -80,6 +84,88 @@ int main() {
     if (valido_d2 == 1) {
         for (int i = 0; i < TAM_NAVIO; i++) { tabuleiro[linha_d2 - i][col_d2 + i] = navio[i]; }
         printf("Navio 4 (Diagonal /) posicionado.\n");
+    }
+
+    // Gerando a habilidade em cone
+    for (int i = 0; i < TAM_HAB; i++) {
+        for (int j = 0; j < TAM_HAB; j++) {
+            // Desenha apenas nas 3 primeiras linhas. A cada linha, a largura aumenta.
+            if (i < 3 && j >= (2 - i) && j <= (2 + i)) {
+                cone[i][j] = 1;
+            }
+        }
+    }
+
+    // Gerando a habilidade em cruz
+    for (int i = 0; i < TAM_HAB; i++) {
+        for (int j = 0; j < TAM_HAB; j++) {
+            // Marca 1 se for a linha do meio OU a coluna do meio
+            if (i == 2 || j == 2) {
+                cruz[i][j] = 1;
+            }
+        }
+    }
+
+    // Gerando a habilidade em octaedro
+    for (int i = 0; i < TAM_HAB; i++) {
+        for (int j = 0; j < TAM_HAB; j++) {
+            // Calculamos a distância do ponto atual até o centro (2,2)
+            // Como C básico não tem função abs() em stdio, usamos operador ternário para valor absoluto
+            int dist_i = (i > 2) ? (i - 2) : (2 - i);
+            int dist_j = (j > 2) ? (j - 2) : (2 - j);
+            
+            // Se a soma das distâncias for menor ou igual a 2, pertence ao octaedro
+            if (dist_i + dist_j <= 2) {
+                octaedro[i][j] = 1;
+            }
+        }
+    }
+
+    // Aplicando a habilidade em cone no tabuleiro
+    int origem_cone_linha = 1, origem_cone_col = 2;
+    for (int i = 0; i < TAM_HAB; i++) {
+        for (int j = 0; j < TAM_HAB; j++) {
+            if (cone[i][j] == 1) {
+                // Calcula as coordenadas
+                int l_tab = origem_cone_linha + i;
+                int c_tab = origem_cone_col + (j - 2);
+
+                // Validação se está dentro do tabuleiro
+                if (l_tab >= 0 && l_tab < TAM_TABULEIRO && c_tab >= 0 && c_tab < TAM_TABULEIRO) {
+                    tabuleiro[l_tab][c_tab] = 5;
+                }
+            }
+        }
+    }
+
+    // Aplicando a habilidade em cruz no tabuleiro
+    int origem_cruz_linha = 7, origem_cruz_col = 3;
+    for (int i = 0; i < TAM_HAB; i++) {
+        for (int j = 0; j < TAM_HAB; j++) {
+            if (cruz[i][j] == 1) {
+                int l_tab = origem_cruz_linha + (i - 2);
+                int c_tab = origem_cruz_col + (j - 2);
+
+                if (l_tab >= 0 && l_tab < TAM_TABULEIRO && c_tab >= 0 && c_tab < TAM_TABULEIRO) {
+                    tabuleiro[l_tab][c_tab] = 5;
+                }
+            }
+        }
+    }
+
+    // Aplicando a habilidade em octaedro no tabuleiro
+    int origem_octa_linha = 4, origem_octa_col = 7;
+    for (int i = 0; i < TAM_HAB; i++) {
+        for (int j = 0; j < TAM_HAB; j++) {
+            if (octaedro[i][j] == 1) {
+                int l_tab = origem_octa_linha + (i - 2);
+                int c_tab = origem_octa_col + (j - 2);
+
+                if (l_tab >= 0 && l_tab < TAM_TABULEIRO && c_tab >= 0 && c_tab < TAM_TABULEIRO) {
+                    tabuleiro[l_tab][c_tab] = 5;
+                }
+            }
+        }
     }
 
     printf("\n");
