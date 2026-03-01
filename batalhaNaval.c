@@ -1,40 +1,79 @@
 #include <stdio.h>
+#include <windows.h>
 
-// Desafio Batalha Naval - MateCheck
-// Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
-// Siga os comentários para implementar cada parte do desafio.
+// Configurações de tamanho
+#define TAM_TABULEIRO 10
+#define TAM_NAVIO 3
 
 int main() {
-    // Nível Novato - Posicionamento dos Navios
-    // Sugestão: Declare uma matriz bidimensional para representar o tabuleiro (Ex: int tabuleiro[5][5];).
-    // Sugestão: Posicione dois navios no tabuleiro, um verticalmente e outro horizontalmente.
-    // Sugestão: Utilize `printf` para exibir as coordenadas de cada parte dos navios.
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    // Enchendo o tabuleiro de água
+    int tabuleiro[TAM_TABULEIRO][TAM_TABULEIRO] = {0};
 
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    // Sugestão: Expanda o tabuleiro para uma matriz 10x10.
-    // Sugestão: Posicione quatro navios no tabuleiro, incluindo dois na diagonal.
-    // Sugestão: Exiba o tabuleiro completo no console, mostrando 0 para posições vazias e 3 para posições ocupadas.
+    // Inserindo três vezes o número 3 para representar os navios e seu tamanho
+    int navio[TAM_NAVIO] = {3, 3, 3};
 
-    // Nível Mestre - Habilidades Especiais com Matrizes
-    // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
-    // Sugestão: Utilize estruturas de repetição aninhadas para preencher as áreas afetadas por essas habilidades no tabuleiro.
-    // Sugestão: Exiba o tabuleiro com as áreas afetadas, utilizando 0 para áreas não afetadas e 1 para áreas atingidas.
+    // Navio horizontal
+    int linha_horiz = 2;
+    int col_horiz_ini = 1;
 
-    // Exemplos de exibição das habilidades:
-    // Exemplo para habilidade em cone:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 1 1 1 1 1
+    // Navio vertical
+    int linha_vert_ini = 5;
+    int col_vert = 7;
+
+    // Verifica se o navio cabe no tabuleiro horizontalmente
+    if (col_horiz_ini + TAM_NAVIO <= TAM_TABULEIRO) {
+        
+        // Coloca o navio no tabuleiro
+        for (int i = 0; i < TAM_NAVIO; i++) {
+            tabuleiro[linha_horiz][col_horiz_ini + i] = navio[i];
+        }
+        printf("-> Navio horizontal posicionado! ✅\n");
+        
+    } else {
+        printf("-> O navio ultrapassa os limites do tabuleiro! ⚠️\n");
+    }
+
+    // Verifica se o navio cabe no tabuleiro verticalmente
+    int posicao_valida = 1; 
+    if (linha_vert_ini + TAM_NAVIO <= TAM_TABULEIRO) {
+        
+        // Antes de posicionar, verifica se já existe um navio no local
+        for (int i = 0; i < TAM_NAVIO; i++) {
+            if (tabuleiro[linha_vert_ini + i][col_vert] != 0) {
+                posicao_valida = 0;
+                break;
+            }
+        }
+        // Colocando o navio vertical se a posição for válida
+        if (posicao_valida == 1) {
+            for (int i = 0; i < TAM_NAVIO; i++) {
+                tabuleiro[linha_vert_ini + i][col_vert] = navio[i];
+            }
+            printf("-> Navio vertical posicionado! ✅\n");
+        } else {
+            printf("-> O navio sobrepoe outro navio! ⚠️\n");
+        }
+        
+    } else {
+        printf("-> O navio ultrapassa os limites do tabuleiro! ⚠️\n");
+    }
+    printf("\n");
+    // --- EXIBIÇÃO DO TABULEIRO ---
+    printf("Tabuleiro de Batalha Naval! ⚔️\n");
+    printf("------------- 🔱 -------------\n");
     
-    // Exemplo para habilidade em octaedro:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 0 0 1 0 0
-
-    // Exemplo para habilidade em cruz:
-    // 0 0 1 0 0
-    // 1 1 1 1 1
-    // 0 0 1 0 0
-
+    // Loop para percorrer as linhas da matriz
+    for (int linha = 0; linha < TAM_TABULEIRO; linha++) {
+        // Loop para percorrer as colunas da matriz
+        for (int coluna = 0; coluna < TAM_TABULEIRO; coluna++) {
+            // Imprime o valor daquela coordenada com um espaço para ficar organizado
+            printf(" %d ", tabuleiro[linha][coluna]);
+        }
+        // Ao final de cada linha, pula para a linha de baixo no console
+        printf("\n");
+    }
+    printf("------------- 🔱 -------------\n");
     return 0;
 }
